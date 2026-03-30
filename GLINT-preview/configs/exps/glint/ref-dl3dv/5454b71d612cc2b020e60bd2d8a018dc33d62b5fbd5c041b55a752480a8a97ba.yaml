@@ -1,0 +1,14 @@
+configs:
+    - configs/base.yaml # default arguments for the whole codebase
+    - configs/models/glint.yaml # envgs model configuration
+    - configs/datasets/ref-dl3dv/5454b71d612cc2b020e60bd2d8a018dc33d62b5fbd5c041b55a752480a8a97ba.yaml # dataset usage configuration
+
+model_cfg:
+    supervisor_cfg:
+        perc_loss_start_iter: 45000 # less iterations for faster training
+
+runner_cfg:
+    epochs: 120
+
+# prettier-ignore
+exp_name: {{fileBasenameNoExtension}}

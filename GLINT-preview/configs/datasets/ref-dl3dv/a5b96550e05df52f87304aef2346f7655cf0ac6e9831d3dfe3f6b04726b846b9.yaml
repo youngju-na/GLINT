@@ -1,0 +1,21 @@
+# Auto-generated config for scene: a5b96550e05df52f87304aef2346f7655cf0ac6e9831d3dfe3f6b04726b846b9
+configs: configs/datasets/ref-dl3dv/ref-dl3dv.yaml
+
+dataloader_cfg:
+    dataset_cfg: &dataset_cfg
+        ratio: 0.5
+        data_root: data/datasets/ref-dl3dv/a5b96550e05df52f87304aef2346f7655cf0ac6e9831d3dfe3f6b04726b846b9
+        view_sample: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17]
+
+val_dataloader_cfg:
+    dataset_cfg:
+        <<: *dataset_cfg
+        view_sample: [0, 8, 16]
+
+model_cfg:
+    sampler_cfg:
+        preload_gs: data/datasets/ref-dl3dv/a5b96550e05df52f87304aef2346f7655cf0ac6e9831d3dfe3f6b04726b846b9/sparse/0/points3D.ply
+        spatial_scale: 11.290767357467168
+        # Environment Gaussian
+        env_preload_gs: data/datasets/ref-dl3dv/a5b96550e05df52f87304aef2346f7655cf0ac6e9831d3dfe3f6b04726b846b9/envs/points3D.ply
+        env_bounds: [[-28.57498550415039, 0.20506367087364197, 9.610027313232422], [5.714721202850342, 23.944637298583984, 123.51248931884766]]

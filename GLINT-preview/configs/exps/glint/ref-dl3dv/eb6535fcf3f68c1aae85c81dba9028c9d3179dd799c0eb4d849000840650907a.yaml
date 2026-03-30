@@ -1,0 +1,18 @@
+configs:
+    - configs/base.yaml # default arguments for the whole codebase
+    - configs/models/glint.yaml # envgs model configuration
+    - configs/datasets/ref-dl3dv/eb6535fcf3f68c1aae85c81dba9028c9d3179dd799c0eb4d849000840650907a.yaml # dataset usage configuration
+
+model_cfg:
+    supervisor_cfg:
+        perc_loss_start_iter: 45000 # less iterations for faster training
+
+dataloader_cfg: &dataloader_cfg
+    dataset_cfg: &dataset_cfg
+        use_sky_masks: True # use sky masks
+        
+runner_cfg:
+    epochs: 120
+
+# prettier-ignore
+exp_name: {{fileBasenameNoExtension}}

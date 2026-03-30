@@ -1,0 +1,5 @@
+CUDA_VISIBLE_DEVICES=0 evc-train -c configs/exps/glint/manual_synthetic_GT_cam/scene_4.yaml exp_name=glint/manual_synthetic_GT_cam/0930-manual-synthetic/scene_4
+CUDA_VISIBLE_DEVICES=0 evc-train -c configs/exps/glint/manual_synthetic_GT_cam/scene_5.yaml exp_name=glint/manual_synthetic_GT_cam/0930-manual-synthetic/scene_5
+CUDA_VISIBLE_DEVICES=0 evc-train -c configs/exps/glint/manual_synthetic_GT_cam/scene_6.yaml exp_name=glint/manual_synthetic_GT_cam/0930-manual-synthetic/scene_6
+CUDA_VISIBLE_DEVICES=0 evc-train -c configs/exps/glint/manual_synthetic_GT_cam/scene_7.yaml exp_name=glint/manual_synthetic_GT_cam/0930-manual-synthetic/scene_7
+CUDA_VISIBLE_DEVICES=0 evc-train -c configs/exps/glint/manual_synthetic_GT_cam/scene_8.yaml exp_name=glint/manual_synthetic_GT_cam/0930-manual-synthetic/scene_8

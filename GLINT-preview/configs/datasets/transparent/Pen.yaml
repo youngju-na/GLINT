@@ -1,0 +1,23 @@
+configs: configs/datasets/transparent/transparent.yaml
+
+dataloader_cfg:
+    dataset_cfg: &dataset_cfg
+        ratio: 0.25
+        data_root: data/datasets/transparent/Pen
+        view_sample: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30,
+                         31, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 49, 50, 51, 52, 53, 54, 55, 57, 58, 59, 60,
+                        61, 62, 63, 65, 66, 67, 68, 69, 70, 71, 73, 74, 75, 76, 77, 78, 79, 81, 82, 83, 84, 85, 86, 87, 89, 90,
+                         91, 92, 93, 94, 95, 97, 98, 99, 100, 101, 102, 103] 
+
+val_dataloader_cfg:
+    dataset_cfg:
+        <<: *dataset_cfg
+        view_sample: [0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104]
+
+model_cfg:
+    sampler_cfg:
+        preload_gs: data/datasets/transparent/Pen/sparse/0/points3D.ply
+        spatial_scale: 5.185386837514375
+        # Environment Gaussian
+        env_preload_gs: data/datasets/transparent/Pen/envs/points3D.ply
+        env_bounds: [[-4.014989604610282, -1.272286594806769, -0.9291549369140384], [4.701369814413522, 5.805669571499153, 6.484669203888074]]      

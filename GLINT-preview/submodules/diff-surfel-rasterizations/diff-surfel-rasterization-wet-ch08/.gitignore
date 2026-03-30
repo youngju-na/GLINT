@@ -1,0 +1,7 @@
+build/
+diff_surfel_rasterization_wet_ch07.egg-info/
+dist/
+*.so
+.vscode
+**__pycache__**
+*.pyc

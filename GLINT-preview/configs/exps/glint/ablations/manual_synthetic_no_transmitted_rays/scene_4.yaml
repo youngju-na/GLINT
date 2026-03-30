@@ -1,0 +1,18 @@
+configs:
+    - configs/base.yaml # default arguments for the whole codebase
+    - configs/models/glint.yaml # envgs model configuration
+    - configs/datasets/manual_synthetic/scene_4.yaml # dataset usage configuration
+
+model_cfg:
+    sampler_cfg:
+        trans_env_densify_grad_threshold: 0.0002
+    supervisor_cfg:
+        perc_loss_start_iter: 45000 # less iterations for faster training
+
+        render_transmission_start_iter: 999999
+        
+runner_cfg:
+    epochs: 120
+
+# prettier-ignore
+exp_name: {{fileBasenameNoExtension}}
