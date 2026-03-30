@@ -1,2 +1,0 @@
-recursive-include blenderproc/resources *.csv *.json *.txt
-recursive-include blenderproc/external *.sh

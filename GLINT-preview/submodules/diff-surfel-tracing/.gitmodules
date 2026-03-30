@@ -1,3 +1,0 @@
-[submodule "third_party/optix"]
-	path = third_party/optix
-	url = https://github.com/NVIDIA/optix-dev.git

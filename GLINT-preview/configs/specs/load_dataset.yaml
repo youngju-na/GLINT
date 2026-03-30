@@ -1,9 +1,0 @@
-dataloader_cfg:
-    dataset_cfg:
-        type: VolumetricVideoDataset
-        view_sample: [0, null, 1]
-
-val_dataloader_cfg:
-    dataset_cfg:
-        type: VolumetricVideoDataset
-        view_sample: [0, null, 1]

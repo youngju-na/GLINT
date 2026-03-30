@@ -1,4 +1,0 @@
-runner_cfg:
-    log_interval: 100
-    save_ep: 100
-    eval_ep: 10
