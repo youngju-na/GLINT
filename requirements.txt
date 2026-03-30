@@ -1,0 +1,56 @@
+# Core utilities
+tqdm
+h5py
+ujson
+scipy
+numpy
+addict
+PyYaml
+psutil
+sympy
+ipython
+ruamel.yaml
+rich
+
+# Vision & image processing
+imageio
+imageio-ffmpeg
+opencv-python
+scikit-image
+pillow
+PyTurboJPEG
+
+# 3D & geometry
+PyGLM
+trimesh
+pycolmap
+open3d
+plyfile
+pytorch3d
+
+# Neural rendering
+fast_gauss
+einops
+kornia
+lpips
+pytorch-msssim
+
+# Training & logging
+tensorboard
+
+# Viewer & GUI
+PyOpenGL
+websockets
+imgui-bundle
+
+# DiffusionRenderer priors (G-buffer)
+diffusers
+accelerate
+transformers
+
+# Submodule dependencies (install separately after PyTorch)
+# simple_knn @ git+https://gitlab.inria.fr/bkerbl/simple-knn
+# diff_surfel_tracing @ submodules/diff-surfel-tracing
+# diff_surfel_rasterization_wet @ submodules/diff-surfel-rasterizations/diff-surfel-rasterization-wet
+# diff_surfel_rasterization_wet_ch06 @ submodules/diff-surfel-rasterizations/diff-surfel-rasterization-wet-ch06
+# diff_surfel_rasterization_wet_ch08 @ submodules/diff-surfel-rasterizations/diff-surfel-rasterization-wet-ch08
