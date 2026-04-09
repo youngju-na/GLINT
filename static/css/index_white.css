@@ -259,9 +259,9 @@ a {
 .publication-venue {
   display: inline-flex;
   align-items: center;
-  gap: 0.72rem;
+  gap: 0.56rem;
   margin: 0 auto 1rem;
-  padding: 0.42rem 0.5rem 0.42rem 0.42rem;
+  padding: 0.38rem 0.72rem 0.38rem 0.42rem;
   border: 1px solid rgba(61, 125, 175, 0.18);
   border-radius: 999px;
   background:
@@ -280,14 +280,14 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.35rem;
-  padding: 0.18rem 0.9rem;
+  min-height: 2.12rem;
+  padding: 0.16rem 0.84rem;
   border-radius: 999px;
   background: linear-gradient(135deg, #2d6fa2, #66afea);
   color: #f7fbff;
-  font-size: 0.94rem;
+  font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   box-shadow:
     0 8px 18px rgba(61, 125, 175, 0.24),
@@ -296,20 +296,22 @@ a {
 
 .venue-year {
   position: relative;
-  display: inline-block;
-  padding-right: 0.08rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.12rem;
+  padding-right: 0.18rem;
   color: var(--text);
-  font-size: 1.18rem;
+  font-size: 1.06rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
 }
 
 .venue-year::after {
   content: "";
   position: absolute;
   left: 0.04rem;
-  right: 0.08rem;
-  bottom: -0.2rem;
+  right: 0.18rem;
+  bottom: 0.28rem;
   height: 2px;
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(61, 125, 175, 0.12), rgba(61, 125, 175, 0.75), rgba(61, 125, 175, 0.12));
