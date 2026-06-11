@@ -43,6 +43,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top center, rgba(157, 206, 255, 0.2), transparent 28%),
     linear-gradient(180deg, #fafbfd 0%, #f7f8fb 60%, #f6f7fa 100%);
@@ -259,6 +260,8 @@ a {
 .publication-venue {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.56rem;
   margin: 0 auto 1rem;
   padding: 0.38rem 0.72rem 0.38rem 0.42rem;
@@ -306,7 +309,8 @@ a {
   letter-spacing: 0.1em;
 }
 
-.venue-year::after {
+.venue-year::after,
+.venue-award::after {
   content: "";
   position: absolute;
   left: 0.04rem;
@@ -315,6 +319,32 @@ a {
   height: 2px;
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(61, 125, 175, 0.12), rgba(61, 125, 175, 0.75), rgba(61, 125, 175, 0.12));
+}
+
+.venue-award {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.12rem;
+  padding: 0 0.22rem 0 0.18rem;
+  color: #7b3f46;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.venue-award::before {
+  content: "";
+  width: 1px;
+  height: 1.3rem;
+  margin-right: 0.7rem;
+  background: rgba(61, 125, 175, 0.25);
+}
+
+.venue-award::after {
+  left: 0.88rem;
+  right: 0.18rem;
+  background: linear-gradient(90deg, rgba(123, 63, 70, 0.12), rgba(123, 63, 70, 0.65), rgba(123, 63, 70, 0.12));
 }
 
 [data-theme="dark"] .publication-venue {
@@ -337,6 +367,18 @@ a {
 
 [data-theme="dark"] .venue-year::after {
   background: linear-gradient(90deg, rgba(91, 163, 230, 0.14), rgba(91, 163, 230, 0.82), rgba(91, 163, 230, 0.14));
+}
+
+[data-theme="dark"] .venue-award {
+  color: #e0adb3;
+}
+
+[data-theme="dark"] .venue-award::before {
+  background: rgba(121, 184, 239, 0.22);
+}
+
+[data-theme="dark"] .venue-award::after {
+  background: linear-gradient(90deg, rgba(211, 157, 163, 0.14), rgba(211, 157, 163, 0.72), rgba(211, 157, 163, 0.14));
 }
 
 /* ─── Authors ─────────────────────────────────────── */
@@ -586,6 +628,20 @@ a {
   background: rgba(71, 108, 97, 0.14);
 }
 
+.btn-youtube {
+  border-color: rgba(190, 38, 38, 0.24);
+  color: #9d2525;
+  background: rgba(190, 38, 38, 0.07);
+}
+
+.btn-youtube .btn-icon svg {
+  fill: currentColor;
+}
+
+.btn-youtube .btn-icon {
+  background: rgba(190, 38, 38, 0.12);
+}
+
 .btn-paper:hover {
   border-color: rgba(47, 95, 134, 0.42);
   background: rgba(47, 95, 134, 0.14);
@@ -608,6 +664,12 @@ a {
   border-color: rgba(71, 108, 97, 0.38);
   background: rgba(71, 108, 97, 0.14);
   color: #37564d;
+}
+
+.btn-youtube:hover {
+  border-color: rgba(190, 38, 38, 0.38);
+  background: rgba(190, 38, 38, 0.13);
+  color: #812020;
 }
 
 [data-theme="dark"] .publication-links .button {
@@ -643,6 +705,12 @@ a {
   background: rgba(157, 199, 184, 0.08);
 }
 
+[data-theme="dark"] .btn-youtube {
+  color: #ec9c9c;
+  border-color: rgba(236, 156, 156, 0.18);
+  background: rgba(236, 156, 156, 0.08);
+}
+
 [data-theme="dark"] .btn-code .btn-icon {
   background: rgba(197, 207, 219, 0.1);
 }
@@ -651,10 +719,15 @@ a {
   background: rgba(157, 199, 184, 0.12);
 }
 
+[data-theme="dark"] .btn-youtube .btn-icon {
+  background: rgba(236, 156, 156, 0.12);
+}
+
 [data-theme="dark"] .btn-paper:hover,
 [data-theme="dark"] .btn-arxiv:hover,
 [data-theme="dark"] .btn-code:hover,
-[data-theme="dark"] .btn-dataset:hover {
+[data-theme="dark"] .btn-dataset:hover,
+[data-theme="dark"] .btn-youtube:hover {
   color: var(--text);
 }
 
@@ -1338,7 +1411,10 @@ a {
 
   .publication-venue {
     gap: 0.5rem;
-    padding: 0.36rem 0.42rem 0.36rem 0.36rem;
+    width: 100%;
+    max-width: 21rem;
+    box-sizing: border-box;
+    padding: 0.36rem;
   }
 
   .venue-chip {
@@ -1351,6 +1427,34 @@ a {
   .venue-year {
     font-size: 1rem;
     letter-spacing: 0.1em;
+  }
+
+  .venue-award {
+    flex-basis: 100%;
+    justify-content: center;
+    min-height: 1.7rem;
+    font-size: 0.96rem;
+    letter-spacing: 0.03em;
+  }
+
+  .venue-award::before {
+    display: none;
+  }
+
+  .venue-award::after {
+    left: 0.04rem;
+  }
+
+  .publication-links {
+    gap: 0.6rem;
+  }
+
+  .publication-links .button {
+    box-sizing: border-box;
+    min-width: 0;
+    width: calc(50% - 0.3rem);
+    max-width: 10.5rem;
+    padding: 0.68rem 0.75rem;
   }
 
   .results-metrics {
