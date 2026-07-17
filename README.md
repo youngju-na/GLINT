@@ -1,227 +1,325 @@
 # GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport
 
-[![arXiv](https://img.shields.io/badge/arXiv-2603.26181-b31b1b.svg)](https://arxiv.org/abs/2603.26181) [![GLINT](https://img.shields.io/badge/GLINT-Project%20Page-blue.svg)](https://youngju-na.github.io/GLINT) [![Dataset](https://img.shields.io/badge/Dataset-Download-green.svg)](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing)
+[![arXiv](https://img.shields.io/badge/arXiv-2603.26181-b31b1b.svg)](https://arxiv.org/abs/2603.26181)
+[![Project page](https://img.shields.io/badge/GLINT-Project%20Page-blue.svg)](https://youngju-na.github.io/GLINT)
+[![Dataset](https://img.shields.io/badge/Dataset-Download-green.svg)](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing)
 
-Official code release for the paper: **GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport**.
+Official implementation of **GLINT: Modeling Scene-Scale Transparency via
+Gaussian Radiance Transport**.
 
-[Youngju Na](https://youngju-na.github.io/)<sup>1,2,*</sup>, [Jaeseong Yun](mailto:jaeseong.yun@naverlabs.com)<sup>2</sup>, [Soohyun Ryu](mailto:soohyun.ryu@naverlabs.com)<sup>2</sup>, [Hyunsu Kim](https://blandocs.github.io/)<sup>2</sup>, [Sung-Eui Yoon](https://sgvr.kaist.ac.kr/~sungeui/)<sup>1</sup>, [Suyong Yeon](mailto:suyong.yeon@naverlabs.com)<sup>2</sup>
+[Youngju Na](https://youngju-na.github.io/)<sup>1,2,*</sup>,
+[Jaeseong Yun](mailto:jaeseong.yun@naverlabs.com)<sup>2</sup>,
+[Soohyun Ryu](mailto:soohyun.ryu@naverlabs.com)<sup>2</sup>,
+[Hyunsu Kim](https://blandocs.github.io/)<sup>2</sup>,
+[Sung-Eui Yoon](https://sgvr.kaist.ac.kr/~sungeui/)<sup>1</sup>,
+[Suyong Yeon](mailto:suyong.yeon@naverlabs.com)<sup>2</sup>
 
 _<sup>1</sup>KAIST, <sup>2</sup>NAVER LABS_
 
+> [!NOTE]
+> The `main` branch contains the new
+> [gsplat](https://github.com/nerfstudio-project/gsplat)-based implementation.
+> The original EasyVolCap-based release is preserved on the
+> [`easyvolcap`](https://github.com/youngju-na/GLINT/tree/easyvolcap) branch.
+
 ## News
 
-* **[2026-06-07]**: Updates with bug fixes and minor improvements are coming soon.
-* **[2026-06-07]**: 🎉 Our paper has been selected as an Award Candidate!
-* **[2026-04-09]**: 🎉 Our paper has been selected for an Oral presentation at CVPR 2026.
-* **[2026-03-30]**: Initial code release.
-
-
-## Overview
-
-GLINT is a method for modeling large-scale transparent and reflective scenes with Gaussian radiance transport.
+- **[2026-07-16]**: Released the
+  [gsplat](https://github.com/nerfstudio-project/gsplat)-based implementation of
+  GLINT. The original implementation remains available on the `easyvolcap`
+  branch.
+- **[2026-06-07]**: Updates with bug fixes and minor improvements are coming soon.
+- **[2026-06-07]**: 🎉 Our paper has been selected as an Award Candidate!
+- **[2026-04-09]**: 🎉 Our paper has been selected for an Oral presentation at CVPR 2026.
+- **[2026-03-30]**: Initial code release.
 
 ## Installation
 
-1. **Clone the repository and setup environment:**
+We tested the code on Linux with Python 3.11, PyTorch 2.9.1+cu126, the CUDA
+12.9 toolkit, and an NVIDIA RTX 4090.
+
+Clone recursively so that the OptiX tracer dependency is present:
 
 ```bash
-conda create -n glint python=3.11 -y
-conda activate glint
+git clone --recursive https://github.com/youngju-na/GLINT.git
+cd GLINT
 ```
 
-2. **Install PyTorch:**
-
-Install PyTorch matching your CUDA version (see [PyTorch website](https://pytorch.org/get-started/locally/) for the correct command). Example for CUDA 11.8:
+Create a separate environment for the gsplat implementation:
 
 ```bash
-pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu118
+conda create -n splat python=3.11 cmake ninja -y
+conda activate splat
 ```
 
-3. **Install dependencies:**
+Install PyTorch for your CUDA runtime. The tested combination is:
 
 ```bash
-cat requirements.txt | sed -e '/^\s*-.*$/d' -e '/^\s*#.*$/d' -e '/^\s*$/d' | \
-  awk '{split($0, a, "#"); if (length(a) > 1) print a[1]; else print $0;}' | \
-  awk '{split($0, a, "@"); if (length(a) > 1) print a[2]; else print $0;}' | \
-  xargs -n 1 pip install
-
-pip install -e . --no-build-isolation --no-deps
+pip install torch==2.9.1 torchvision==0.24.1 \
+  --index-url https://download.pytorch.org/whl/cu126
 ```
 
-4. **Install submodules:**
+Compiling gsplat and the OptiX tracer requires a CUDA toolkit with `nvcc` and
+the CUDA development headers. Set `CUDA_HOME` before installing them. On
+toolkits that place headers under `targets/x86_64-linux`, also expose that
+directory to the host compiler:
 
 ```bash
-git submodule update --init --recursive
-pip install -v submodules/diff-surfel-tracing
-pip install \
-  submodules/diff-surfel-rasterizations/diff-surfel-rasterization-wet \
-  submodules/diff-surfel-rasterizations/diff-surfel-rasterization-wet-ch06 \
-  submodules/diff-surfel-rasterizations/diff-surfel-rasterization-wet-ch08
+export CUDA_HOME=/path/to/cuda
+export CPATH="${CUDA_HOME}/targets/x86_64-linux/include${CPATH:+:${CPATH}}"
+export CPLUS_INCLUDE_PATH="${CUDA_HOME}/targets/x86_64-linux/include${CPLUS_INCLUDE_PATH:+:${CPLUS_INCLUDE_PATH}}"
 ```
 
-## Data Preparation
+Install the GLINT-compatible gsplat commit separately. gsplat is an external
+dependency rather than a copy embedded in this repository:
 
-The `ref-dl3dv` and `3D-FRONT-T` dataset used in our paper is available for download:
-
-**[Download Dataset (Google Drive)](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing)**
-
-GLINT expects datasets in the EasyVolcap-style format.
-At minimum, each scene should provide:
-
-```
-<scene>/
-├── images/
-├── intri.yml
-├── extri.yml
-└── sparse/
+```bash
+BUILD_2DGS=1 NUM_CHANNELS=3,4,6,7 BUILD_EXPERIMENTAL=0 \
+  pip install --no-build-isolation \
+  "git+https://github.com/youngju-na/gsplat.git@83a0dcd3f850cccdc7b92b50fd6a568e3260eae1"
 ```
 
-For the G-buffer guidance, each scene also contains priors obtained from [DiffusionRenderer](https://arxiv.org/abs/2501.18590). You may also consider using other useful priors (e.g., [TransNormal](https://longxiang-ai.github.io/TransNormal/), [Video Depth Anything](https://github.com/DepthAnything/Video-Depth-Anything), etc.). Please refer to these if you want to build your custom datasets:
+GLINT uses gsplat's 2DGS rasterizer; the other gsplat kernels are not required.
+
+Then install the remaining Python packages and GLINT:
+
+```bash
+pip install -r requirements.txt
+pip install --no-deps -e .
+```
+
+Build the differentiable OptiX tracer using the same CUDA toolkit:
+
+```bash
+python -m glint.install_optix
+```
+
+Check the installation and run the tests:
+
+```bash
+python -m glint.verify_installation
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q tests/test_glint_*.py
+```
+
+The PyTorch reference tracer is intended only for unit tests and tiny scenes.
+Full-resolution training requires the OptiX backend.
+
+## Data preparation
+
+The Ref-DL3DV and 3D-FRONT-T datasets used by GLINT are available from the
+[dataset download](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing).
+Each extracted scene follows the released EasyVolCap-style layout:
 
 ```text
 <scene>/
 ├── images/
 ├── intri.yml
 ├── extri.yml
-├── sparse/
-├── envs/
-│   └── points3D.ply
-├── normals/
-│   └── <view_id>/000000.jpg
+├── sparse/0/points3D.ply
+├── envs/points3D.ply
+├── normals/                    # stable-normal priors, when used
 └── diffrens/
-    ├── normal/<view_id>/000000.png
-    ├── depth/<view_id>/000000.png
-    ├── diffuse_albedo/<view_id>/000000.png
-    ├── basecolor/<view_id>/000000.png
-    ├── roughness/<view_id>/000000.png
-    └── metallic/<view_id>/000000.png
+    ├── normal/
+    ├── depth/
+    ├── diffuse_albedo/
+    ├── basecolor/
+    ├── roughness/
+    └── metallic/
 ```
 
-The `diffusion-renderer` prior maps must be placed under `diffrens/`.
+`diffrens` contains the G-buffer priors used for supervision. The downloadable
+datasets already include the [DiffusionRenderer](https://github.com/nv-tlabs/diffusion-renderer)
+priors used in the paper, and the official configurations use
+`diffrens/normal`. No additional normal estimator is required to reproduce the
+released setup.
 
-For training and evaluation, `<scene>` should match the dataset directory name and the config filename in `configs/exps/glint/ref-dl3dv/`.
+For custom data or alternative priors, normal maps can also be generated with
+[StableNormal](https://github.com/Stable-X/StableNormal),
+[TransNormal](https://github.com/longxiang-ai/TransNormal), or
+[Metric3D](https://github.com/YvanYin/Metric3D), while
+[UniRelight](https://github.com/nv-tlabs/UniRelight) provides intrinsic
+decomposition and video relighting. Convert normal predictions to GLINT's
+camera-space convention and store them under `normals/<camera>/<frame>` before
+selecting `use_normal_type: stable`. The `normals` directory is optional;
+missing stable-normal predictions are ignored by the data loader.
 
-<details>
-<summary>Scene list used in our dl3dv-10k subset (ref-dl3dv).</summary>
-
-```text
-194defaa605986166d52ae703b1d44d1a557794698386becaaa5f688f4fb026b
-3712b8fdcb94128c92c2e2c30fb529851e3231cdc7c4451bc6c784f923386e93
-52410f0264d14bde6acd695c637aaa274833be8afcf05ef4fd6a51176ad2dbd2
-543b6607de9318e3a0c68b267a4b616fdc5849a140ba184807d5e70e567f8ec0
-5454b71d612cc2b020e60bd2d8a018dc33d62b5fbd5c041b55a752480a8a97ba
-6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f
-b65e86833c1ae29714ce881bb9d14d3ed1256a08ab944fd9e75d6b29c674346d
-b9df30d6e6078880acc88acb01872c65d337f84b9dba44a23fa29c9861d7e23b
-```
-
-</details>
-
-If you want to prepare your own data from COLMAP outputs, see the preprocessing scripts in `scripts/preprocess/`.
+Official view splits and scene hyperparameters are provided under
+[`configs/exps/glint`](configs/exps/glint). A local scene path can always be
+provided with `--data-root`; no source or YAML edit is required.
 
 ## Training
 
-Example training command:
+Activate the `splat` environment and run commands from the repository root.
+
+### Ref-DL3DV
 
 ```bash
-evc-train -c configs/exps/glint/ref-dl3dv/<scene>.yaml \
-  exp_name=glint/ref-dl3dv/<run_name>/<scene>
+SCENE=6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f
+
+python -m glint.train \
+  --config configs/exps/glint/ref-dl3dv/${SCENE}.yaml \
+  --data-root /path/to/ref-dl3dv/${SCENE} \
+  --output-dir results/glint/ref-dl3dv/${SCENE} \
+  --max-steps 60000 \
+  --interface-geometry-freeze 31000
 ```
 
-For example, to train the scene `6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f`:
+The [`train_ref_dl3dv_6b42.sh`](scripts/train_ref_dl3dv_6b42.sh)
+script provides a short validation run, training, resume, and evaluation
+commands:
 
 ```bash
-evc-train -c configs/exps/glint/ref-dl3dv/6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f.yaml \
-  exp_name=glint/ref-dl3dv/<run_name>/6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f
+DATA_ROOT=/path/to/ref-dl3dv/${SCENE} \
+  bash scripts/train_ref_dl3dv_6b42.sh quick
+
+DATA_ROOT=/path/to/ref-dl3dv/${SCENE} \
+  bash scripts/train_ref_dl3dv_6b42.sh train
 ```
 
-In this scene config, training uses `dataloader_cfg.dataset_cfg.view_sample`, which contains all view indices except multiples of 8.
-
-The default hyperparameters are defined in [`configs/models/glint.yaml`](configs/models/glint.yaml). Key parameters you may want to adjust depending on your scene:
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `render_reflection_start_iter` | `3000` | Iteration to start reflection rendering |
-| `render_transmission_start_iter` | `1000` | Iteration to start transmission rendering |
-| `depth_discrepancy_threshold` | `0.005` | Depth discrepancy threshold (scene-scale dependent) |
-| `trans_map_reg_loss_weight` | `0.01` | Transmission map regularization weight |
-| `trans_guidance_loss_weight` | `0.01` | Transmission guidance loss weight |
-
-## Evaluation
-
-Example evaluation command:
+### 3D-FRONT-T
 
 ```bash
-evc-test -c configs/exps/glint/ref-dl3dv/<scene>.yaml \
-  exp_name=glint/ref-dl3dv/<run_name>/<scene>
+SCENE=scene_4
+
+python -m glint.train \
+  --config configs/exps/glint/3d-front-t/${SCENE}.yaml \
+  --data-root /path/to/3d-front-t/${SCENE} \
+  --output-dir results/glint/3d-front-t/${SCENE} \
+  --max-steps 60000 \
+  --interface-geometry-freeze 31000
 ```
 
-For the same scene:
+The ten-scene sequential benchmark wrapper accepts dataset roots through
+environment variables:
 
 ```bash
-evc-test -c configs/exps/glint/ref-dl3dv/6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f.yaml \
-  exp_name=glint/ref-dl3dv/<run_name>/6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f
+REF_DL3DV_ROOT=/path/to/ref-dl3dv \
+SYNTHETIC_ROOT=/path/to/3d-front-t \
+  bash scripts/train_benchmark_10scenes.sh all
 ```
 
-Evaluation uses `val_dataloader_cfg.dataset_cfg.view_sample`. For `6b42314a2f8a18a193826e2b58e45729453e74524078283f740b8f8d330c3d2f`, this is:
+## Evaluation and rendering
+
+Evaluate the official validation split and save component visualizations:
+
+```bash
+python -m glint.evaluate_dataset \
+  --config configs/exps/glint/ref-dl3dv/${SCENE}.yaml \
+  --data-root /path/to/ref-dl3dv/${SCENE} \
+  --checkpoint results/glint/ref-dl3dv/${SCENE}/checkpoints/latest.pt \
+  --output-dir results/glint/ref-dl3dv/${SCENE}/eval \
+  --save-images \
+  --save-visualizations
+```
+
+### Geometry evaluation
+
+The 3D-FRONT-T geometry benchmark reports normal MAE and angular accuracy,
+depth AbsRel, normalized RMSE and δ < 1.25, and mesh Chamfer distance and F1.
+First render the validation views with raw geometry output enabled:
+
+```bash
+SCENE=scene_4
+
+python -m glint.evaluate_dataset \
+  --config configs/exps/glint/3d-front-t/${SCENE}.yaml \
+  --data-root /path/to/3d-front-t/${SCENE} \
+  --checkpoint results/glint/3d-front-t/${SCENE}/checkpoints/latest.pt \
+  --output-dir results/glint/3d-front-t/${SCENE}/eval \
+  --save-geometry
+```
+
+Evaluate the saved z-depth and camera-space normal maps against the geometry
+ground truth:
+
+```bash
+python -m glint.evaluate_geometry maps \
+  --prediction-root results/glint/3d-front-t/${SCENE}/eval/geometry \
+  --ground-truth-root /path/to/geometry_gt/${SCENE} \
+  --output results/glint/3d-front-t/${SCENE}/eval/geometry_metrics.json
+```
+
+The evaluator applies the paper protocol: the released geometry view split,
+per-view median depth alignment, macro-averaging over validation views, and
+RMSE normalization by mean valid GT depth. The JSON report also includes RMSE
+in the input depth units. Use `--all-views` only for a custom split.
+
+After evaluating all five scenes, reproduce the table-level macro-average with:
+
+```bash
+python -m glint.evaluate_geometry summary \
+  --reports results/glint/3d-front-t/scene_{1,2,3,4,5}/eval/geometry_metrics.json \
+  --output results/glint/3d-front-t/geometry_metrics.json
+```
+
+For mesh evaluation, install the optional CPU dependencies and compare the
+post-processed interface mesh produced by TSDF fusion:
+
+```bash
+pip install -r requirements-geometry.txt
+
+python -m glint.evaluate_geometry mesh \
+  --prediction /path/to/tsdf_fusion_interface_post.ply \
+  --ground-truth /path/to/geometry_gt/${SCENE}/gt_mesh.ply \
+  --output results/glint/3d-front-t/${SCENE}/eval/mesh_metrics.json
+```
+
+Chamfer distance is computed from mesh surfaces sampled at 1.5 cm spacing. The
+report contains meters and decimeters; Table 1 uses decimeters. F1 uses a 1 cm
+distance threshold. The geometry ground-truth package is expected in this
+layout:
 
 ```text
-[0, 8, 16, 24, ..., 320]
+geometry_gt/<scene>/
+├── depths_gt/val_depthZ_XXXX.npy
+├── normals_gt/val_normalCam_XXXX.npy
+└── gt_mesh.ply
 ```
 
-So this scene follows an every-8th-view evaluation split: 41 evaluation views and the remaining 282 views for training.
+Training writes the following under `--output-dir`:
 
-## Custom Rendering
-Example interpolation video rendering:
-
-```bash
-bash scripts/render_interp_video.sh \
-  --config configs/exps/glint/ref-dl3dv/<scene>.yaml \
-  --exp_name glint/ref-dl3dv/<run_name>/<scene> \
-  --cam_idx1 0 \
-  --cam_idx2 8 \
-  --n_frames 60
+```text
+<output>/
+├── checkpoints/
+│   ├── latest.pt
+│   └── step_*.pt
+├── train.log
+└── train_visualizations/
+    ├── PANELS/
+    ├── RENDER/
+    ├── DEPTH/
+    ├── NORMAL/
+    ├── TRANSPARENCY/
+    └── ...
 ```
 
-## Repository Structure
-- `easyvolcap/` — Core framework and GLINT model implementation
-- `configs/` — Model, dataset, and experiment configurations
-- `scripts/` — Preprocessing, training utilities, and rendering scripts
-- `submodules/` — Required custom CUDA and tracing dependencies
-
-## Roadmap
-
-- [x] Release source code.
-- [ ] Release `3D-FRONT-T` Blender files for downstream applications.
-
-## Acknowledgements
-
-This codebase is built on top of [EasyVolcap](https://github.com/zju3dv/EasyVolcap) and the 2D Gaussian ray tracer from [EnvGS](https://github.com/zju3dv/EnvGS). We sincerely thank the authors and contributors of these projects.
-You may also want to check out the related works listed below.
-
-## Related Work
-
-- [TSGS: Improving Gaussian Splatting for Transparent Surface Reconstruction via Normal and De-lighting Priors](https://github.com/longxiang-ai/TSGS)
-- [TransparentGS: Fast Inverse Rendering of Transparent Objects with Gaussians](https://letianhuang.github.io/transparentgs/)
-- [DiffusionRenderer: Neural Inverse and Forward Rendering with Video Diffusion Models](https://github.com/nv-tlabs/diffusion-renderer)
-- [TransNormal: Dense Visual Semantics for Diffusion-based Transparent Object Normal Estimation](https://github.com/longxiang-ai/TransNormal)
+The visualization includes direct and transported RGB, depth, normal, alpha,
+specularity, conditional material transparency, the composited transparency
+gate, diffuse/transmission/reflection contributions, guidance masks, and
+combined visualization panels.
 
 ## Citation
 
-If you find this repository useful, please consider citing our paper:
-
 ```bibtex
-@misc{na2026glint,
-  title={GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport},
-  author={Youngju Na and Jaeseong Yun and Soohyun Ryu and Hyunsu Kim and Sung-Eui Yoon and Suyong Yeon},
-  year={2026},
-  eprint={2603.26181},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2603.26181},
+@inproceedings{na2026glint,
+  title     = {{GLINT}: Modeling Scene-Scale Transparency via Gaussian Radiance Transport},
+  author    = {Na, Youngju and Yun, Jaeseong and Ryu, Soohyun and Kim, Hyunsu and Yoon, Sung-Eui and Yeon, Suyong},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year      = {2026}
 }
 ```
 
-## License
+This implementation is built on [gsplat](https://github.com/nerfstudio-project/gsplat).
+Please also cite gsplat when this backend is used; its citation is included in
+[`CITATION.bib`](CITATION.bib).
 
-This project is released under the [MIT License](LICENSE).
+## License and acknowledgements
+
+GLINT is released under the MIT license in [`LICENSE`](LICENSE). gsplat is an
+external dependency distributed under Apache-2.0, and recursive third-party
+submodules retain their own licenses. See
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for attribution.
+
+We thank the authors and maintainers of gsplat, EasyVolCap, 2D Gaussian
+Splatting, and the differentiable surfel tracing implementation on which this
+release builds.

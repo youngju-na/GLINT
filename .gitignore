@@ -1,84 +1,34 @@
-__pycache__/
+# Editors and operating systems
+.vscode/
 .idea/
-.ipynb_checkpoints/
-*.py[cod]
-*.so
-*.orig
-*.o
-# why ignore json
-# *.json
-*.pth
-*.npy
-#*.ipynb
-
-# graphviz
-*.dot
-*.svg
-*.eps
-
-# macOS
 .DS_Store
 
-# mesh
-*.ply
+# Python caches and build products
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# images
-*.png
-*.jpg
-*.jpeg
-*.gif
-.fuse*
-*.tar.gz
-*.pkl
-*.swp
+# Local environments
+.env
+.venv/
+env/
+venv/
 
-*.obj
-*.mtl
-*.blend
-*.blend1
-*.npz
+# Native extension build files
+.clangd
+compile_commands.json
+cmake-build-*/
 
-*.xls
-*.xlsx
-condaenv*
-*.hdr
-
-data
-*.egg-info
-*.zip
-
-imgui.ini
-logs
-Dear_ImGui_Bundle_interactive_manual.ini
-timg.txt
-*.motd
-
-.pdbr_history
-build
-
-!assets/meshes/*
-*.bin
-*.movie
-*.mp4
-#extri.yml
-#intri.yml
-ok.txt
-bad.txt
-diff.txt
-
-Hujun Bao
-geckodriver.log
-*.rdc
-3rdparty
-
-diff*.html
-
-# *.zip
-# *info.json
+# Local datasets, outputs, and logs
+data/
+results/
+*.log
 *.dump
-*.dmp
-*.exr
-*.bak
-
-#configs/datasets/
-rebuttal/

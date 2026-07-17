@@ -1,0 +1,3 @@
+# Install GLINT and gsplat first; see the root README.
+open3d>=0.18
+scikit-learn>=1.4

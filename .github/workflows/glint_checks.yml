@@ -1,0 +1,28 @@
+name: GLINT checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile GLINT Python sources
+        run: python -m compileall -q glint tests/test_glint_*.py
+      - name: Check shell scripts
+        run: |
+          bash -n scripts/train_ref_dl3dv_6b42.sh
+          bash -n scripts/train_benchmark_10scenes.sh
+      - name: Check for absolute development paths
+        run: |
+          if git grep -n -E '/home/|Codes/GLINT|Codes/gsplat|anaconda3' -- \
+              README.md THIRD_PARTY_NOTICES.md pyproject.toml requirements*.txt \
+              configs glint scripts tests/test_glint_*.py; then
+            echo "Found an absolute development path in a public GLINT file." >&2
+            exit 1
+          fi

@@ -1,4 +1,4 @@
-# Content of configs/datasets/envgs/glint.yaml
+# Shared Ref-DL3DV settings.
 dataloader_cfg:
     dataset_cfg: &dataset_cfg
         ratio: 0.5

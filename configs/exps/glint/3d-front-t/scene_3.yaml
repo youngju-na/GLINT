@@ -1,17 +1,14 @@
 configs:
-    - configs/base.yaml # default arguments for the whole codebase
-    - configs/models/glint.yaml # model configuration
-    - configs/datasets/manual_synthetic_GT_cam_points/scene_3.yaml # dataset usage configuration
+    - configs/base.yaml
+    - configs/models/glint.yaml
+    - configs/datasets/3d-front-t/scene_3.yaml
 
 model_cfg:
     sampler_cfg:
         trans_env_densify_grad_threshold: 0.0002
     supervisor_cfg:
-        use_normal_type: "stable"
-        perc_loss_start_iter: 45000 # less iterations for faster training
+        use_normal_type: "diffren"
+        perc_loss_start_iter: 45000
 
 runner_cfg:
     epochs: 120
-
-# prettier-ignore
-exp_name: {{fileBasenameNoExtension}}

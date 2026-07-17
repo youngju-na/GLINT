@@ -1,100 +1,51 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "easyvolcap"
-version = "0.0.0"
-description = "EasyVolcap: Accelerating Neural Volumetric Video Research"
+name = "glint-gaussian"
+version = "0.1.0"
+description = "GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport"
 readme = "README.md"
-license = { file = "LICENSE" }
-authors = [{ email = "zhenx@zju.edu.cn" }, { name = "Zhen Xu" }]
-requires-python = ">=3.8"
-dynamic = ["dependencies", "optional-dependencies"]
-
-[project.urls]
-homepage = "https://github.com/dendenxu/easyvolcap"
-
-[tool.setuptools]
-# Automatic finding of packages is too slow due to symlink to large datasets (tons of images)
-# It's never just runtime speed, we'd like the overall user experiment to be smooth
-# Including the process of creating commandline interfaces
-packages = [
-    'easyvolcap',
-    'easyvolcap.engine',
-    'easyvolcap.engine.handlers',
-    'easyvolcap.dataloaders',
-    'easyvolcap.dataloaders.datasets',
-    'easyvolcap.models',
-    'easyvolcap.models.networks',
-    'easyvolcap.models.networks.regressors',
-    'easyvolcap.models.networks.embedders',
-    'easyvolcap.models.samplers',
-    'easyvolcap.models.renderers',
-    'easyvolcap.models.supervisors',
-    'easyvolcap.runners',
-    'easyvolcap.runners.evaluators',
-    'easyvolcap.runners.visualizers',
-    'easyvolcap.utils',
-    'easyvolcap.utils.shaders',
-    'easyvolcap.scripts',
-
-    'easyvolcap.configs',
-    'easyvolcap.assets',
-    'easyvolcap.assets.imgs',
-    'easyvolcap.assets.fonts',
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Youngju Na"},
+  {name = "Jaeseong Yun"},
+  {name = "Soohyun Ryu"},
+  {name = "Hyunsu Kim"},
+  {name = "Sung-Eui Yoon"},
+  {name = "Suyong Yeon"},
+]
+dependencies = [
+  "torch>=2.7",
+  "torchvision>=0.22",
+  "gsplat @ git+https://github.com/youngju-na/gsplat.git@83a0dcd3f850cccdc7b92b50fd6a568e3260eae1",
+  "numpy>=2.0,<3.0",
+  "scipy",
+  "lpips==0.1.4",
+  "opencv-python",
+  "imageio",
+  "matplotlib",
+  "pyyaml",
+  "plyfile",
 ]
 
-# [tool.setuptools.packages.find]
-# include = ["easyvolcap*", "scripts*", "main.py"]
-# exclude = ["data"]
-# where = ["easyvolcap", "scripts", "main.py"]
-
-[tool.setuptools.package-dir]
-"easyvolcap" = "easyvolcap"
-"easyvolcap.configs" = "configs"
-"easyvolcap.assets" = "assets"
-
-[tool.setuptools.package-data]
-"*" = [
-    "*.yaml",
-    "*.json",
-    "*.py",
-    "*.yml",
-
-    "*.ttf",
-    "*.otf",
-    "*.woff",
-    "*.woff2",
-    "*.png",
-    "*.jpg",
-    "*.ply",
-    "*.npz",
-    "*.obj",
-
-    "*.frag",
-    "*.vert",
-    "*.glsl",
-] # yes, .py not needed here, but just for clarification that you can use py for config
+[project.optional-dependencies]
+geometry = ["open3d>=0.18", "scikit-learn>=1.4"]
+test = ["pytest>=8.0"]
 
 [project.scripts]
-evc = "easyvolcap.scripts.wrap:main_entrypoint"
-evc-test = "easyvolcap.scripts.wrap:test_entrypoint"
-evc-train = "easyvolcap.scripts.wrap:train_entrypoint"
+glint-train = "glint.train:main"
+glint-evaluate = "glint.evaluate_dataset:main"
+glint-evaluate-geometry = "glint.evaluate_geometry:main"
+glint-render = "glint.render_transport:main"
+glint-verify = "glint.verify_installation:main"
 
-evc-ws = "easyvolcap.scripts.wrap:ws_entrypoint"
-evc-sig = "easyvolcap.scripts.wrap:sig_entrypoint"
-evc-gui = "easyvolcap.scripts.wrap:gui_entrypoint"
-evc-dist = "easyvolcap.scripts.wrap:dist_entrypoint"
-evc-prof = "easyvolcap.scripts.wrap:prof_entrypoint"
+[project.urls]
+Homepage = "https://youngju-na.github.io/GLINT"
+Repository = "https://github.com/youngju-na/GLINT"
+Paper = "https://arxiv.org/abs/2603.26181"
 
-# This should only serve as a commanline registration
-# Dependencies are expected to be installed separatedly
-
-[tool.setuptools.dynamic]
-dependencies = { file = ["requirements.txt"] }
-# NOTE: Somehow, installing with pip install -e ".[dev]" will cause pip to try to install other packages with the dev feature as well..
-# Like running: pip install mediapipe[dev], however such feature doesn't exist in mediapipe, thus the installation fails
-# So we opted to change the name for a full development install from "dev" to "devel"
-# optional-dependencies = { dev = { file = ["requirements-devel.txt"] } }
-optional-dependencies = { devel = { file = ["requirements-dev.txt"] } }
+[tool.setuptools.packages.find]
+include = ["glint*"]
