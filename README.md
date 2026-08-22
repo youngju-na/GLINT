@@ -265,7 +265,7 @@ python -m glint.evaluate_geometry mesh \
 ```
 
 Chamfer distance is computed from mesh surfaces sampled at 1.5 cm spacing. The
-report contains meters and decimeters; Table 1 uses decimeters. F1 uses a 1 cm
+report contains meters and decimeters; Table 1 uses decimeters. F1 uses a 50mm
 distance threshold. The geometry ground-truth package is expected in this
 layout:
 
