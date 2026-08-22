@@ -1,3 +1,5 @@
+
+
 # GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport
 
 [![arXiv](https://img.shields.io/badge/arXiv-2603.26181-b31b1b.svg)](https://arxiv.org/abs/2603.26181)
@@ -256,7 +258,8 @@ For mesh evaluation, install the optional CPU dependencies and compare the
 post-processed interface mesh produced by TSDF fusion:
 
 ```bash
-pip install -r requirements-geometry.txt
+pip install ".[geometry]"
+```
 
 python -m glint.evaluate_geometry mesh \
   --prediction /path/to/tsdf_fusion_interface_post.ply \
