@@ -2,7 +2,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2603.26181-b31b1b.svg)](https://arxiv.org/abs/2603.26181)
 [![Project page](https://img.shields.io/badge/GLINT-Project%20Page-blue.svg)](https://youngju-na.github.io/GLINT)
-[![Dataset](https://img.shields.io/badge/Dataset-Download-green.svg)](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing)
+[![Dataset](https://img.shields.io/badge/Dataset-Download-green.svg)](https://drive.google.com/drive/folders/1626l8RXKLpCqRhGLdGSYhcumm3HjOnYg?usp=sharing)
 
 Official implementation of **GLINT: Modeling Scene-Scale Transparency via
 Gaussian Radiance Transport**.
@@ -107,7 +107,7 @@ Full-resolution training requires the OptiX backend.
 ## Data preparation
 
 The Ref-DL3DV and 3D-FRONT-T datasets used by GLINT are available from the
-[dataset download](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing).
+[dataset download](https://drive.google.com/drive/folders/1626l8RXKLpCqRhGLdGSYhcumm3HjOnYg?usp=sharing).
 Each extracted scene follows the released EasyVolCap-style layout:
 
 ```text
