@@ -1,6 +1,6 @@
 # GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport
 
-[![arXiv](https://img.shields.io/badge/arXiv-2603.26181-b31b1b.svg)](https://arxiv.org/abs/2603.26181) [![GLINT](https://img.shields.io/badge/GLINT-Project%20Page-blue.svg)](https://youngju-na.github.io/GLINT) [![Dataset](https://img.shields.io/badge/Dataset-Download-green.svg)](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing)
+[![arXiv](https://img.shields.io/badge/arXiv-2603.26181-b31b1b.svg)](https://arxiv.org/abs/2603.26181) [![GLINT](https://img.shields.io/badge/GLINT-Project%20Page-blue.svg)](https://youngju-na.github.io/GLINT) [![Dataset](https://img.shields.io/badge/Dataset-Download-green.svg)](https://drive.google.com/drive/folders/1626l8RXKLpCqRhGLdGSYhcumm3HjOnYg?usp=sharing)
 
 Official code release for the paper: **GLINT: Modeling Scene-Scale Transparency via Gaussian Radiance Transport**.
 
@@ -63,7 +63,7 @@ pip install \
 
 The `ref-dl3dv` and `3D-FRONT-T` dataset used in our paper is available for download:
 
-**[Download Dataset (Google Drive)](https://drive.google.com/drive/folders/1NB_AuBQ5lP3pkdS9M-x9o0oqRrXP4S6a?usp=sharing)**
+**[Download Dataset (Google Drive)](https://drive.google.com/drive/folders/1626l8RXKLpCqRhGLdGSYhcumm3HjOnYg?usp=sharing)**
 
 GLINT expects datasets in the EasyVolcap-style format.
 At minimum, each scene should provide:
